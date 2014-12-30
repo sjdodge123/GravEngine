@@ -167,7 +167,7 @@ package GameBoard
 			ball.timer = lifeTimer;
 			calcVel(event,ball);
 			balls.push(ball);
-			addChild(ball);
+			addChildAt(ball,0);
 			
 		}
 		

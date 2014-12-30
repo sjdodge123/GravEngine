@@ -106,13 +106,13 @@ package GameBoard.PhysicsModels
 		{
 			if (op.velocity < op.velocityMax)
 			{
-				op.velX += op.thrustAccelX*deltaT + op.gravAccelX*deltaT - .005*op.velX;
-				op.velY += op.thrustAccelY*deltaT + op.gravAccelY*deltaT - .005*op.velY;
+				op.velX += op.thrustAccelX*deltaT + op.gravAccelX*deltaT;// - .005*op.velX;
+				op.velY += op.thrustAccelY*deltaT + op.gravAccelY*deltaT;// - .005*op.velY;
 			}
 			if (op.velocity > op.velocityMax)
 			{
-				op.velX += op.thrustAccelX*deltaT + op.gravAccelX*deltaT - .025*op.velX;
-				op.velY += op.thrustAccelY*deltaT + op.gravAccelY*deltaT - .025*op.velY;
+				op.velX += op.thrustAccelX*deltaT + op.gravAccelX*deltaT;// - .025*op.velX;
+				op.velY += op.thrustAccelY*deltaT + op.gravAccelY*deltaT;// - .025*op.velY;
 			}
 			op.velocity = Math.sqrt(Math.pow(op.velX, 2) + Math.pow(op.velY, 2));
 			op.velocityDirX = op.velX/op.velocity;

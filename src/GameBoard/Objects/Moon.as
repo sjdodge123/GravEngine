@@ -5,7 +5,10 @@ package GameBoard.Objects
 	public class Moon extends GameObject
 	{
 		public var radius:int = 50;
+		public const gravityStrength:int = 5400;
+//		public const gravityStrength:int = 0;
 		private var circle:Sprite;
+		
 		public function Moon(x:int,y:int)
 		{
 			this.x = x;
@@ -18,7 +21,7 @@ package GameBoard.Objects
 		
 		public function getGravityConst():Number
 		{
-			return 5400;
+			return gravityStrength;
 		}
 	}
 }

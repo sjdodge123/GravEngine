@@ -18,9 +18,11 @@ package GameBoard.Objects
 		public function ObjectSpawner(x:int,y:int,newX:int,newY:int,z:int)
 		{
 			spout = new Sprite();
-			spout.rotationZ = -z; 
+			spout.rotationZ = -z;
+			spout.graphics.beginFill(0xFFFFFF);
 			spout.graphics.lineStyle(.5,0x000000);
 			spout.graphics.drawRect(-17.5,0,35,35);
+			spout.graphics.endFill();
 			addChild(spout);
 			
 			this.x = x;
@@ -38,6 +40,8 @@ package GameBoard.Objects
 			spawnNewBall = new Timer(hoseSpawnTime);
 			spawnNewBall.addEventListener(TimerEvent.TIMER,spawnTimerExp);
 			spawnNewBall.start();
+			
+			
 		}
 		
 		protected function spawnTimerExp(event:TimerEvent):void
