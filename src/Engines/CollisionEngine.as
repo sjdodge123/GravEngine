@@ -1,9 +1,9 @@
 package Engines
 {
 	import GameBoard.Objects.Ball;
+	import GameBoard.Objects.GameObject;
 	import GameBoard.Objects.Moon;
 	import GameBoard.PhysicsModels.ObjectPhysics;
-	import GameBoard.Objects.GameObject;
 
 	public class CollisionEngine
 	{
@@ -45,7 +45,6 @@ package Engines
 		
 		private function checkBallCollide(ball:Ball):void
 		{
-			
 			for(var i:int=0;i<balls.length;i++)
 			{
 				if(balls[i] != ball)
@@ -64,38 +63,55 @@ package Engines
 		
 		private function moveReactively(thisBall:GameObject,otherObject:GameObject, deltaT:Number):void
 		{
+			var c:Vector.<Number> = new Vector.<Number>;
+			c[0] = otherObject.x - thisBall.x;
+			c[1] = otherObject.y - thisBall.y;
+			
+			var cMag:Number = Math.sqrt(Math.pow(c[0],2)+Math.pow(c[1],2));
+			c[0] = c[0]/cMag;
+			c[1] = c[1]/cMag;
+			
 			var normal:Vector.<Number> = new Vector.<Number>;
-			normal[0] = thisBall.x - otherObject.x;
-			normal[1] = thisBall.y - otherObject.y;
+			normal[0] = -c[1];
+			normal[1] = c[0];
 			
-			var normalMag:Number = Math.sqrt(Math.pow(normal[0],2)+Math.pow(normal[1],2));
-			normal[0] = normal[0]/normalMag;
-			normal[1] = normal[1]/normalMag;
+			var thisVelB:Vector.<Number> = new Vector.<Number>;
+			var dotProd1N:Number = thisBall.physics.op.velX*normal[0]+thisBall.physics.op.velY*normal[1];
+			thisVelB[0] = normal[0]*dotProd1N;
+			thisVelB[1] = normal[1]*dotProd1N;
 			
-			var tangent:Vector.<Number> = new Vector.<Number>;
-			tangent[0] = normal[1];
-			tangent[1] = -normal[0];
+			var thisVelA:Vector.<Number> = new Vector.<Number>;
+			var dotProd1C:Number = thisBall.physics.op.velX*c[0]+thisBall.physics.op.velY*c[1];
+			thisVelA[0] = c[0]*dotProd1C;
+			thisVelA[1] = c[1]*dotProd1C;
 			
-			var theta:Number = Math.acos((thisBall.physics.op.velocityDirX*tangent[0] + thisBall.physics.op.velocityDirY*tangent[1]));
-			var alpha:Number = 2*theta;
-			
-			var velInitial:Vector.<Number> = new Vector.<Number>;
-			velInitial[0] = thisBall.physics.op.velX;
-			velInitial[1] = thisBall.physics.op.velY;
-			
-			var velInitial2:Vector.<Number> = new Vector.<Number>;
-			velInitial2[0] = otherObject.physics.op.velX;
-			velInitial2[1] = otherObject.physics.op.velY;
+			var otherVelB:Vector.<Number> = new Vector.<Number>;
+			var dotProd2N:Number = otherObject.physics.op.velX*normal[0]+otherObject.physics.op.velY*normal[1];
+			otherVelB[0] = normal[0]*dotProd2N;
+			otherVelB[1] = normal[1]*dotProd2N;
 			
 			
-			thisBall.physics.op.velX = 0.7*(velInitial[0]*Math.cos(alpha) - velInitial[1]*Math.sin(alpha));
-			thisBall.physics.op.velY = 0.7*(velInitial[0]*Math.sin(alpha) + velInitial[1]*Math.cos(alpha));
+			var otherVelA:Vector.<Number> = new Vector.<Number>;
+			var dotProd2C:Number = otherObject.physics.op.velX*c[0]+otherObject.physics.op.velY*c[1];
+			otherVelA[0] = c[0]*dotProd2C;
+			otherVelA[1] = c[1]*dotProd2C;
 			
-			otherObject.physics.op.velX = 0.7*(velInitial2[0]*Math.cos(alpha) - velInitial2[1]*Math.sin(alpha));
-			otherObject.physics.op.velY = 0.7*(velInitial2[0]*Math.sin(alpha) + velInitial2[1]*Math.cos(alpha));
+			thisBall.physics.op.velX = thisVelB[0] + otherVelA[0];
+			thisBall.physics.op.velY = thisVelB[1] + otherVelA[1];
+			
+			otherObject.physics.op.velX = thisVelA[0] + otherVelB[0];
+			otherObject.physics.op.velY = thisVelA[1] + otherVelB[1];
 
 			predictBounce(deltaT,thisBall);
+			predictBounce(deltaT,otherObject);
 		}
+		
+		private function dotProduct(a:Vector.<Number>,b:Vector.<Number>):Number
+		{
+			return a[0]*b[0] + a[1]*b[1];
+		}
+		
+		
 		private function predictBounce(deltaT:Number,thisBall:GameObject):void
 		{
 			thisBall.physics.op.newX = thisBall.x + thisBall.physics.op.velX*deltaT;

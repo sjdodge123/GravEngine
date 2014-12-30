@@ -4,7 +4,7 @@ package
 	import flash.events.Event;
 	import GameBoard.Gameboard;
 
-	[SWF(backgroundColor= "0xFFFFFF", width="1920", height ="1080", frameRate='30')]
+	[SWF(backgroundColor= "0xFFFFFF", width="1920", height ="1080", frameRate='60')]
 	public class GravEngine extends Sprite
 	{
 		private var gameBoard:Gameboard;
