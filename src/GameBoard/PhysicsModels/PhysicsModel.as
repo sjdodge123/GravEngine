@@ -1,34 +1,32 @@
 package GameBoard.PhysicsModels
 {
 	import GameBoard.Objects.Moon;
-	import Engines.CollisionEngine;
 
-	public class BallPhysics
+	public class PhysicsModel
 	{
 		public var op:ObjectPhysics;
 		public var x:int = 0;
 		public var y:int= 0;
-		private var freeToMove:Boolean = true;
 		private var moon:Moon;
-		private var ce:CollisionEngine;
-		public function BallPhysics(x:int, y:int, moon:Moon)
+		public function PhysicsModel(x:int, y:int, moon:Moon)
 		{
 			this.x = x;
 			this.y = y;
 			this.moon = moon;
-			ce = new CollisionEngine();
 			op = new ObjectPhysics();
 			op.newX = x;
 			op.newY = y;
 		}
 		
-		public function update():Vector.<Number>
+		public function update():void
 		{
 			calculateGravity();
 			updateVelocity(1);
 			predictPosition(1);
-			freeToMove = ce.checkMove(moon,this);
-			if(freeToMove)
+		}
+		public function checkMovement(canMove:Boolean):Vector.<Number>
+		{
+			if(canMove)
 			{
 				moveFreely(1);
 			}
@@ -67,10 +65,11 @@ package GameBoard.PhysicsModels
 			
 			op.velX = 0.7*(velInitial[0]*Math.cos(alpha) - velInitial[1]*Math.sin(alpha));
 			op.velY = 0.7*(velInitial[0]*Math.sin(alpha) + velInitial[1]*Math.cos(alpha));
-
+			
 			predictBounce(deltaT);
 			
 		}
+		
 		private function predictBounce(deltaT:Number):void
 		{
 			op.newX = this.x + op.velX*deltaT;

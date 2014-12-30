@@ -2,7 +2,7 @@ package GameBoard.Objects
 {
 	import flash.display.Sprite;
 
-	public class Moon extends Sprite
+	public class Moon extends GameObject
 	{
 		public var radius:int = 50;
 		private var circle:Sprite;
@@ -15,7 +15,6 @@ package GameBoard.Objects
 			circle.graphics.drawCircle(0,0,radius);
 			addChild(circle);
 		}
-		
 		
 		public function getGravityConst():Number
 		{
