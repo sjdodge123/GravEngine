@@ -110,8 +110,6 @@ package Engines
 		{
 			return a[0]*b[0] + a[1]*b[1];
 		}
-		
-		
 		private function predictBounce(deltaT:Number,thisBall:GameObject):void
 		{
 			thisBall.physics.op.newX = thisBall.x + thisBall.physics.op.velX*deltaT;

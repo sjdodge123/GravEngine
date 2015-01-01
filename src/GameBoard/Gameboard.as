@@ -9,6 +9,7 @@ package GameBoard
 	import flash.utils.Timer;
 	
 	import Engines.CollisionEngine;
+	import Engines.TrackingEngine;
 	
 	import Events.SpawnEvent;
 	
@@ -33,24 +34,26 @@ package GameBoard
 		private var totalLifeTime:int = 20;
 		private var mouseIsDown:Boolean = false;
 		private var spawnContainer:Sprite = new Sprite();
+		private var track:TrackingEngine;
 		public function Gameboard(stage:Stage)
 		{
 			arrow = new Arrow(0,0);
 			balls = new Vector.<Ball>;
 			spawners = new Vector.<ObjectSpawner>;
-			
 			op = new ObjectPhysics;
+			track = new TrackingEngine(stage);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN,mouseDown);
 			stage.addEventListener(MouseEvent.MOUSE_UP,leftClick);
-			
-			stage.addEventListener(KeyboardEvent.KEY_DOWN,keyPressed);
+			stage.addEventListener(KeyboardEvent.KEY_UP,keyPressed);
 			stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN,mouseDown);
 			stage.addEventListener(MouseEvent.RIGHT_MOUSE_UP,rightClick);
-			
 			stage.addEventListener(MouseEvent.MOUSE_MOVE,moveMouse);
+			
 			moon = new Moon(stage.stageWidth/2,stage.stageHeight/2);
 			ce = new CollisionEngine(balls,moon);
 			addChild(moon);
+			
+			
 			//addChild(spawnContainer);
 			//spawnContainer.addEventListener(SpawnEvent.BALL,spawnBall,true);
 		}
@@ -97,13 +100,8 @@ package GameBoard
 			{
 				balls[i].update();
 				balls[i].checkMovement(ce.checkCollide(balls[i]));
-				
 			}
-			for(var j:int=0;j<spawners.length;j++)
-			{
-				spawners[j].update();
-			}
-			
+			track.update(balls.length);
 		}
 		
 		protected function mouseDown(event:MouseEvent):void
